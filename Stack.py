@@ -18,15 +18,21 @@ class Stack:
 class Queue:
     def __init__(self):
         self.queue = LinkedList()
+        self.size = 0
     
     def enqueue(self, value):
         self.queue.insertlast(Node(value=value))
+        self.size += 1
 
     def dequeue(self):
         node = self.queue.deleteat(0)
         if node == None:
             return
+        self.size -= 1
         return node.get_value()
+    
+    def get_size(self):
+        return self.size
 
 
 if __name__ == '__main__':

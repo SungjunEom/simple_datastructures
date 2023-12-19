@@ -1,4 +1,5 @@
 from BinaryTree import BTNode
+from Stack import Queue
 
 class BinarySearchTree:
     def __init__(self):
@@ -136,6 +137,20 @@ class BinarySearchTree:
                 self.traverse(mode=mode, node=node.get_right(), sep=sep)
             print(node.get_value(), end=sep)
             return
+        
+        elif mode=='levelorder':
+            node = self.BST
+            queue = Queue()
+            queue.enqueue(node)
+            while queue.get_size() != 0:
+                target = queue.dequeue()
+                print(target.get_value(), end=sep)
+                if target.get_left() != None:
+                    queue.enqueue(target.get_left())
+                if target.get_right() != None:
+                    queue.enqueue(target.get_right())
+            return
+
 
         else:
             print('Specify a mode.')
@@ -198,4 +213,16 @@ if __name__ == '__main__':
     bst.delete(25)
     print('=====Delete All====')
     bst.traverse()
+    print()
+    print('=====Queue=====')
+    bst = BinarySearchTree()
+    bst.insert(3)
+    bst.insert(4)
+    bst.insert(2)
+    bst.insert(25)
+    bst.insert(1)
+    bst.insert(7)
+    bst.insert(5)
+    bst.insert(8)
+    bst.traverse('levelorder', sep=', ')
     print()
