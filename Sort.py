@@ -1,2 +1,2 @@
-def selection_sort():
+def selection_sort(target: list):
     

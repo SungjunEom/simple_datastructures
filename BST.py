@@ -81,8 +81,6 @@ class BinarySearchTree:
                     current_node.get_parent().set_left(current_node.get_left())
                 elif current_node.get_parent().get_right() == current_node:
                     current_node.get_parent().set_right(current_node.get_left())
-                else: # Root node case
-                    self.BST = current_node.get_left()
                 return
 
 
