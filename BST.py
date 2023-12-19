@@ -53,59 +53,66 @@ class BinarySearchTree:
     def delete(self, value, current_node=None):
         if current_node == None:
             current_node = self.BST
+        if current_node.get_value() == None:
+            return
         
-        if current_node.get_value() == value:
-            # Case 1. no child node.
-            if current_node.get_left() == None and current_node.get_right() == None:
-                if current_node.get_parent().get_left() == current_node:
-                    current_node.get_parent().set_left(None)
-                elif current_node.get_parent().get_right() == current_node:
-                    current_node.get_parent().set_right(None)
-                else: # Root node case
-                    self.BST = BTNode()
+        if current_node.get_value() > value:
+            if current_node.get_left() == None:
+                print('Deletion dismissed for', value)
                 return
-            
-            # Case 2. has one child node.
-            elif current_node.get_left() == None:
-                if current_node.get_parent() == None: # Root node case
-                    self.BST = current_node.get_right()
-                elif current_node.get_parent().get_left() == current_node:
-                    current_node.get_parent().set_left(current_node.get_right())
-                elif current_node.get_parent().get_right() == current_node:
-                    current_node.get_parent().set_right(current_node.get_right())
-                return
-            elif current_node.get_right() == None:
-                if current_node.get_parent() == None: # Root node case
-                    self.BST = current_node.get_left()
-                elif current_node.get_parent().get_left() == current_node:
-                    current_node.get_parent().set_left(current_node.get_left())
-                elif current_node.get_parent().get_right() == current_node:
-                    current_node.get_parent().set_right(current_node.get_left())
-                return
-
-
-            # Case 3. has multiple children nodes.
-            else:
-                # Either find min in right half tree or find max in left half tree.
-                if current_node.get_right() != None:
-                    min = self.find_min(current_node.get_right())
-                    current_node.set_value(min.get_value())
-                    self.delete(min.get_value(),min)
-
-                elif current_node.get_left() != None:
-                    max = self.find_max(current_node.get_left())
-                    current_node.set_value(max.get_value())
-                    self.delete(max.get_value(),max)
-
-                
-        elif current_node.get_value() > value:
             self.delete(value, current_node.get_left())
             return
         
         elif current_node.get_value() < value:
+            if current_node.get_right() == None:
+                print('Deletion dismissed for', value)
+                return
             self.delete(value, current_node.get_right())
             return
-                
+        
+        elif current_node.get_value() == value:
+            if current_node.get_left() != None and current_node.get_right() != None:
+                max = self.find_max(current_node.get_left())
+                current_node.set_value(max.get_value())
+                self.delete(max.get_value(), max)
+                return
+            
+            parent = current_node.get_parent()
+            if current_node.get_left() != None:
+                if parent == None:
+                    self.BST = current_node.get_left()
+                    self.BST.set_parent(None)
+                    return
+                if parent.get_left() == current_node:
+                    parent.set_left(current_node.get_left())
+                    current_node.get_left().set_parent(parent)
+                else:
+                    parent.set_right(current_node.get_left())
+                    current_node.get_left().set_parent(parent)
+                return
+            
+            if current_node.get_right() != None:
+                if parent == None:
+                    self.BST = current_node.get_right()
+                    self.BST.set_parent(None)
+                    return
+                if parent.get_right() == current_node:
+                    parent.set_right(current_node.get_right())
+                    current_node.get_right().set_parent(parent)
+                else:
+                    parent.set_left(current_node.get_right())
+                    current_node.get_right().set_parent(parent)
+                return
+            
+            if current_node == self.BST:
+                self.BST = BTNode()
+
+            else:
+                if parent.get_left() == current_node:
+                    parent.set_left(None)
+                else:
+                    parent.set_right(None)
+                return                
 
             
     def traverse(self, mode='inorder', node=None, sep=''):
@@ -195,22 +202,33 @@ if __name__ == '__main__':
     print(bst.search(1))
     bst.traverse('postorder', sep=', ')
     print()
+    print('===Gonna delete 1 2 5 8 25====')
+    bst.traverse(sep=', ')
+    print()
     bst.delete(1)
+    bst.traverse(sep=', ')
+    print()
     bst.delete(2)
+    bst.traverse(sep=', ')
+    print()
     bst.delete(5)
+    bst.traverse(sep=', ')
+    print()
     bst.delete(8)
+    bst.traverse(sep=', ')
+    print()
     bst.delete(25)
-    print('===Delete 1 2 5 8 25====')
+    print('===Deleted 1 2 5 8 25====')
     bst.traverse(sep=', ')
     print()
     bst.delete(4)
-    print('===Delete 4(Root node)====')
+    print('===Deleted 4(Root node)====')
     bst.traverse(sep=', ')
     print()
     bst.delete(7)
     bst.delete(25)
     print('=====Delete All====')
-    bst.traverse()
+    bst.traverse(sep=', ')
     print()
     print('=====Queue=====')
     bst = BinarySearchTree()
